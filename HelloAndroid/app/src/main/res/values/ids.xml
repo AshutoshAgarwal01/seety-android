@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item name="radioGroupId" type="id"></item>
+    <item name="moreProjInfoId" type="id"></item>
+    <item name="mainLinearLayoutId" type="id"></item>
+</resources>

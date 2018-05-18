@@ -1,0 +1,24 @@
+<resources>
+    <string name="app_name">Seety</string>
+    <string name="top_header">How may we help you?</string>
+    <string name="previous">Previous</string>
+    <string name="next">Next</string>
+    <string name="moreProjectInfo">Please tell us a little about your project.</string>
+    <string name="projectAddress">What is your project address?</string>
+    <string name="customerInfo">Now, please tell us something about yourself.</string>
+    <string name="projectTime">When do you want service?</string>
+    <string name="selectDate">Select Date</string>
+    <string name="selectTime">Select Time</string>
+    <string name="street">Street</string>
+    <string name="city">City</string>
+    <string name="state">State</string>
+    <string name="pin">302021</string>
+    <string name="firstName">First Name</string>
+    <string name="lastName">Last Name</string>
+    <string name="email">Email</string>
+    <string name="phoneNumber">Phone</string>
+    <string name="nav_back">Back</string>
+    <string name="nav_home">Home</string>
+    <string name="nav_next">Next</string>
+    <string name="review">Please review your request!</string>
+</resources>

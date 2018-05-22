@@ -1,10 +1,12 @@
 package com.example.pranav.helloandroid;
 
 import android.app.Activity;
+import android.app.VoiceInteractor;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.CardView;
 import android.view.Gravity;
 import android.view.MenuItem;
@@ -14,9 +16,31 @@ import android.widget.GridLayout;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.android.volley.NetworkResponse;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.VolleyLog;
+import com.android.volley.toolbox.HttpHeaderParser;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
+import com.android.volley.AuthFailureError;
+import com.google.gson.Gson;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.StringReader;
+import java.io.UnsupportedEncodingException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.jar.Attributes;
 
 public class WorkSummaryActivity extends Activity {
     private android.support.design.widget.BottomNavigationView bottomNav;
@@ -27,15 +51,96 @@ public class WorkSummaryActivity extends Activity {
         setContentView(R.layout.worksummary);
 
         initialize();
-        }
+    }
 
     private void initialize() {
         TextView tv = findViewById(R.id.topCategories);
         tv.setText(R.string.review);
 
+        BottomNavigationView bottomNav = findViewById(R.id.bottom_nav);
+        MenuItem item = bottomNav.getMenu().findItem(R.id.nav_next);
+        item.setIcon(R.drawable.send);
+        item.setTitle("Submit");
+
+        item.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                try {
+                    submitOrder();
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                return true;
+            }
+        });
+
         initializeBottomNav();
 
         showSummary();
+    }
+
+    private void submitOrder() throws JSONException {
+        RequestQueue requestQueue = Volley.newRequestQueue(this);
+        String url = "http://seetywebapi.azurewebsites.net/api/order";
+        //OptionNode data = new OptionNode(1, "Appliances", "What type of work do you need done?", OptionType.SINGLE);
+
+        Order order = Utilities.GetFinalOrder();
+
+        Gson gson = new Gson();
+        JSONObject jsonData = new JSONObject(gson.toJson(order));
+
+        final String requestBody = jsonData.toString();
+
+        StringRequest requestObject = new StringRequest(
+                Request.Method.POST,
+                url,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        Toast.makeText(getApplicationContext(), "Order submitted successfully!", Toast.LENGTH_SHORT).show();
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Toast.makeText(getApplicationContext(), "Oops! Something went wrong.", Toast.LENGTH_SHORT).show();
+                    }
+                }
+        )
+
+        {
+            @Override
+            public String getBodyContentType() {
+                return "application/json; charset=utf-8";
+            }
+
+            @Override
+            public byte[] getBody() {
+                try {
+                    return requestBody == null ? null : requestBody.getBytes("utf-8");
+                } catch (UnsupportedEncodingException uee) {
+                    VolleyLog.wtf("Unsupported Encoding while trying to get the bytes of %s using %s", requestBody, "utf-8");
+                    return null;
+                }
+            }
+
+            @Override
+            protected Response<String> parseNetworkResponse(NetworkResponse response) {
+                String responseString = "";
+                if (response != null) {
+
+                    responseString = String.valueOf(response.statusCode);
+
+                }
+                return Response.success(responseString, HttpHeaderParser.parseCacheHeaders(response));
+            }
+        };
+
+        requestQueue.add(requestObject);
+
+        String toastMessage = "Your order is being submitted.";
+        Toast.makeText(getApplicationContext(), toastMessage, Toast.LENGTH_SHORT).show();
     }
 
     private void showSummary() {
@@ -172,7 +277,8 @@ public class WorkSummaryActivity extends Activity {
         View v = new View(this);
         LinearLayout.LayoutParams vParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, Utilities.getMeasureinDp(this,1));
         v.setLayoutParams(vParams);
-        v.setBackgroundColor(getResources().getColor(R.color.lightGray));
+        //v.setBackgroundColor(getResources().getColor(R.color.lightGray));
+        v.setBackgroundColor(ContextCompat.getColor(this, R.color.lightGray));
         int tendp = Utilities.getMeasureinDp(this,10);
         Utilities.setMargins(v, tendp, tendp, tendp, tendp);
 

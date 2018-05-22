@@ -8,7 +8,10 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import java.sql.Time;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 
 public class Utilities {
     public void loadCategoryTree(String categoryName){
@@ -70,4 +73,40 @@ public class Utilities {
         }
     }
 
+    public static Order GetFinalOrder() {
+        Order o = new Order();
+        o.CreatedDateTime = Calendar.getInstance().getTime();
+        o.Customer = CustomerResponse.CustomerPersonalInfo;
+        o.Location = CustomerResponse.Address;
+        o.OrderId = "1";
+
+        Date projTime = getCalendarObj(CustomerResponse.ProjectDate, CustomerResponse.ProjectTime);
+
+        o.OrderLines = new ArrayList<>();
+        o.OrderLines.add(new OrderLine(1, projTime, CustomerResponse.MoreProjectInfo, GetServiceInfo()));
+
+        return o;
+    }
+
+    private static OptionNode GetServiceInfo() {
+
+        OptionNode topNode = GlobalVariable.get_topCategoryNode();
+
+        return  topNode.Clone(topNode);
+    }
+
+    private static Date getCalendarObj(Calendar date, Calendar time) {
+        int hours = time.get(Calendar.HOUR_OF_DAY);
+        int minutes = time.get(Calendar.MINUTE);
+        int ampm = time.get((Calendar.AM_PM));
+
+        int day = date.get(Calendar.DAY_OF_MONTH);
+        int month = date.get(Calendar.MONTH);
+        int year = date.get(Calendar.YEAR);
+
+        Calendar c = Calendar.getInstance();
+        c.set(year, month, day, hours, minutes);
+
+        return c.getTime();
+    }
 }

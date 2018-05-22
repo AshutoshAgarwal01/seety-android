@@ -53,11 +53,6 @@ public class CustomerInfo extends Activity {
         TextView tv = findViewById(R.id.topCategories);
         tv.setText(R.string.customerInfo);
 
-        BottomNavigationView bottomNav = findViewById(R.id.bottom_nav);
-        MenuItem item = bottomNav.getMenu().findItem(R.id.nav_next);
-        item.setIcon(R.drawable.send);
-        item.setTitle("Submit");
-
         et_fname = findViewById(R.id.firstName);
         et_lname = findViewById(R.id.lastName);
         et_email = findViewById(R.id.email);

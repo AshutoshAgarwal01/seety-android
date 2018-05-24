@@ -8,12 +8,15 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v7.widget.CardView;
+import android.support.v7.widget.Toolbar;
+import android.util.LayoutDirection;
 import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.GridLayout.LayoutParams;
 import android.widget.Toast;
@@ -27,7 +30,7 @@ public class IssueNavigation extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        currentNode =  GlobalVariable.get_activityOptionNode(); //(OptionNode) getIntent().getSerializableExtra("node");
+        currentNode =  GlobalVariable.get_activityOptionNode();
         setContentView(R.layout.issuenavigation);
 
         initialize();
@@ -35,6 +38,9 @@ public class IssueNavigation extends Activity {
 
     private void initialize() {
         initializeBottomNav();
+
+        /*TextView toolbarText = findViewById(R.id.toolbar_text);
+        toolbarText.setText(R.string.issue_navigation);*/
 
         TextView tv = findViewById(R.id.topCategories);
         tv.setText(currentNode.get_description());
@@ -120,7 +126,7 @@ public class IssueNavigation extends Activity {
     }
 
     private boolean isLeaf(OptionNode node) {
-        ArrayList<OptionNode> children = (ArrayList<OptionNode>)node.get_childrenNodes();
+        ArrayList<OptionNode> children = node.get_childrenNodes();
         return children == null || children.size() == 0;
     }
 
@@ -165,20 +171,6 @@ public class IssueNavigation extends Activity {
                         c.setCardBackgroundColor(Color.parseColor("#FFFFFF"));
                     }
                     cv.setCardBackgroundColor(Color.LTGRAY);
-
-                    //nextClick(v);
-
-                    /*if(isLeaf(node)){
-                        //when, Little more, address, name-email-phone
-                        Intent i = new Intent(cv.getContext(), ProjectTime.class);
-                        startActivity(i);
-                    }
-                    else {
-                        //Start new issue navigation activity
-                        Intent i = new Intent(cv.getContext(), IssueNavigation.class);
-                        i.putExtra("node", node);
-                        startActivity(i);
-                    }*/
                 }
             });
         }
@@ -240,71 +232,20 @@ public class IssueNavigation extends Activity {
         tv.setText(curNode.get_name());
         innerLinear.addView(tv);
 
+        //Render radio button or check box
+        /*if(curNode.get_optionType() == OptionType.SINGLE){
+            RadioButton rb = new RadioButton(this);
+            rb.setId(currentNode.get_nodeId()+1000);
+            int rbH = Utilities.getMeasureinDp(this,50);
+            int rbW = Utilities.getMeasureinDp(this,50);
+            LinearLayout.LayoutParams rbParams = new LinearLayout.LayoutParams(ivWidth, ivHeight);
+            rbParams.setLayoutDirection(LayoutDirection.LTR);
+            rb.setLayoutParams(rbParams);
+            innerLinear.addView(rb);
+        }*/
+
         card.addView(innerLinear);
 
         return card;
     }
-
-    /*private ArrayList<OptionNode> getSelectedNodesOld() {
-        ArrayList<OptionNode> children = (ArrayList<OptionNode>)currentNode.get_childrenNodes();
-        ArrayList<OptionNode> selectedNodes = new ArrayList<>();
-        if(currentNode.get_optionType() == OptionType.SINGLE){
-            OptionNode node = null;
-            RadioGroup rg = findViewById(R.id.radioGroupId);
-            int selectedId = rg.getCheckedRadioButtonId();
-            for(int i = 0; i < children.size(); i++){
-                OptionNode curNode = (OptionNode) children.toArray()[i];
-                if(curNode.get_nodeId() == selectedId){
-                    node = curNode;
-                    break;
-                }
-            }
-            selectedNodes.add(node);
-        }
-        else if (currentNode.get_optionType() == OptionType.MULTIPLE){
-            for(int i = 0; i < children.size(); i++){
-                OptionNode curNode = (OptionNode) children.toArray()[i];
-                CheckBox cb = findViewById(curNode.get_nodeId());
-
-                if(cb.isChecked()){
-                    selectedNodes.add(curNode);
-                }
-            }
-        }
-        return selectedNodes;
-    }
-    private void renderAsCheckBoxes() {
-        LinearLayout issueNavBody = findViewById(R.id.issueNavBody);
-        ArrayList<OptionNode> children = (ArrayList<OptionNode>)currentNode.get_childrenNodes();
-
-        for(int i = 0; i < children.size(); i++){
-            OptionNode curNode = (OptionNode) children.toArray()[i];
-            String text = curNode.get_name();
-            CheckBox cb = new CheckBox(getApplicationContext());
-            cb.setText(text);
-            cb.setTextSize(20);
-            cb.setId(curNode.get_nodeId());
-            issueNavBody.addView(cb);
-        }
-    }
-    private void renderAsRadioButtons1(){
-        ArrayList<OptionNode> children = (ArrayList<OptionNode>)currentNode.get_childrenNodes();
-
-        RadioGroup radioGroup = new RadioGroup(this);
-        radioGroup.setId(R.id.radioGroupId);
-        radioGroup.setOrientation(RadioGroup.VERTICAL);
-        RadioGroup.LayoutParams layoutParams;
-        for(int i = 0; i < children.size(); i++){
-            OptionNode curNode = (OptionNode) children.toArray()[i];
-            String text = curNode.get_name();
-            RadioButton rb = new RadioButton(this);
-            rb.setId(curNode.get_nodeId());
-            rb.setTextSize(20);
-            rb.setText(text);
-            layoutParams = new RadioGroup.LayoutParams(RadioGroup.LayoutParams.MATCH_PARENT,RadioGroup.LayoutParams.MATCH_PARENT);
-            radioGroup.addView(rb, layoutParams);
-        }
-        LinearLayout issueNavBody = findViewById(R.id.issueNavBody);
-        issueNavBody.addView(radioGroup);
-    }*/
 }

@@ -41,7 +41,10 @@ public class IssueNavigation extends Activity {
 
         TextView tv = findViewById(R.id.topCategories);
         tv.setText(currentNode.get_description());
-        renderOptions(currentNode.get_optionType());
+
+        LinearLayout issueNavBody = findViewById(R.id.issueNavBody);
+        LinearLayout innerLinear = Utilities.CreateScrollView(this, issueNavBody);
+        renderOptions(currentNode.get_optionType(), innerLinear);
     }
 
     private void initializeBottomNav(){
@@ -127,42 +130,36 @@ public class IssueNavigation extends Activity {
         return children == null || children.size() == 0;
     }
 
-    private void renderOptions(OptionType optionType){
+    private void renderOptions(OptionType optionType, LinearLayout optionParentLayout){
         if(optionType == OptionType.SINGLE){
-            renderCards(optionType);
+            renderCards(optionType, optionParentLayout);
         }
         else if (optionType == OptionType.MULTIPLE){
-            renderCards(optionType);
+            renderCards(optionType, optionParentLayout);
         }
     }
 
-    private void renderCards(OptionType optionType){
+    private void renderCards(OptionType optionType, LinearLayout optionParentLayout){
         ArrayList<OptionNode> children = currentNode.get_childrenNodes();
-
-        LinearLayout mainLinear = new LinearLayout(this);
-        mainLinear.setId(R.id.mainLinearLayoutId);
-        mainLinear.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
-        mainLinear.setOrientation(LinearLayout.VERTICAL);
 
         for(int i = 0; i < children.size(); i++){
             final OptionNode curNode = children.get(i);
 
             //Create cardview for this option and attach that to main linear layout.
             CardView cv = getCardView(curNode);
-            setCardClickEvent(cv, curNode, optionType);
+            setCardClickEvent(cv, optionParentLayout, optionType);
 
-            mainLinear.addView(cv);
+            optionParentLayout.addView(cv);
         }
-        LinearLayout issueNavBody = findViewById(R.id.issueNavBody);
-        issueNavBody.addView(mainLinear);
     }
 
-    private void setCardClickEvent(final CardView cv, final OptionNode node, OptionType optionType) {
+    private void setCardClickEvent(final CardView cv, final LinearLayout optionParentLayout, OptionType optionType) {
         if(optionType == OptionType.SINGLE){
             cv.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    LinearLayout lv = findViewById(R.id.mainLinearLayoutId);
+                    //LinearLayout lv = findViewById(R.id.mainLinearLayoutId);
+                    LinearLayout lv = optionParentLayout;
                     for(int i = 0; i < lv.getChildCount(); i++){
                         CardView c = (CardView) lv.getChildAt(i);
                         c.setCardBackgroundColor(Color.parseColor("#FFFFFF"));

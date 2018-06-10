@@ -2,8 +2,11 @@ package com.example.pranav.helloandroid;
 
 import android.content.Context;
 import android.util.TypedValue;
+import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.Toast;
 
 import com.android.volley.RequestQueue;
@@ -155,6 +158,23 @@ public class Utilities {
         o.OrderLines.add(new OrderLine(1, projTime, CustomerResponse.MoreProjectInfo, GetServiceInfo()));
 
         return o;
+    }
+
+    public static LinearLayout CreateScrollView(Context context, LinearLayout parentLiner){
+        ScrollView scv = new ScrollView(context);
+        scv.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT));
+        scv.setFillViewport(true);
+        parentLiner.addView(scv);
+
+        //Need this because scroll views can have only one direct child.
+        LinearLayout innerLinear = new LinearLayout(context);
+        innerLinear.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
+        innerLinear.setOrientation(LinearLayout.VERTICAL);
+        innerLinear.setHorizontalGravity(Gravity.LEFT);
+        innerLinear.setVerticalGravity(Gravity.TOP);
+        scv.addView(innerLinear);
+
+        return innerLinear;
     }
 
     private static OptionNode GetServiceInfo() {

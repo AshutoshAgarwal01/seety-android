@@ -145,19 +145,7 @@ public class WorkSummaryActivity extends Activity {
 
     private void showSummary() {
         LinearLayout issueNavBody = findViewById(R.id.issueNavBody);
-
-        ScrollView scv = new ScrollView(this);
-        scv.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT));
-        scv.setFillViewport(true);
-        issueNavBody.addView(scv);
-
-        //Need this because scroll views can have only one direct child.
-        LinearLayout innerLinear = new LinearLayout(this);
-        innerLinear.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
-        innerLinear.setOrientation(LinearLayout.VERTICAL);
-        innerLinear.setHorizontalGravity(Gravity.LEFT);
-        innerLinear.setVerticalGravity(Gravity.CENTER_VERTICAL);
-        scv.addView(innerLinear);
+        LinearLayout innerLinear = Utilities.CreateScrollView(this, issueNavBody);
 
         //Show category selection first.
         OptionNode tempNode = GlobalVariable.get_topCategoryNode();

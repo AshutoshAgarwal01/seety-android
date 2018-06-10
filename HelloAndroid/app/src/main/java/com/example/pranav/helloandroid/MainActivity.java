@@ -32,7 +32,6 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        initialize();
         Utilities.getHierarchies(this
             ,new IVolleyCallback(){
                 @Override
@@ -51,6 +50,8 @@ public class MainActivity extends AppCompatActivity {
                     GlobalVariable.set_allCategories(nodes);
                 }
             });
+
+        initialize();
     }
 
     private void setupToolbar(){

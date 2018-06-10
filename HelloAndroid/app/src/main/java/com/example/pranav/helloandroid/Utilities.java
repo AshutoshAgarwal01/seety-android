@@ -1,23 +1,92 @@
 package com.example.pranav.helloandroid;
 
 import android.content.Context;
-import android.support.annotation.NonNull;
-import android.support.design.widget.BottomNavigationView;
 import android.util.TypedValue;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
-import java.sql.Time;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonArrayRequest;
+import com.android.volley.toolbox.Volley;
+
+import org.json.JSONArray;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 
 public class Utilities {
+
     public void loadCategoryTree(String categoryName){
-        OptionNode rootNode = this.getMockedTree(categoryName);
+        OptionNode rootNode = null; // = this.getMockedTree(categoryName);
+
+        try{
+            for (OptionNode node: GlobalVariable.get_allCategories()){
+                if(node.get_name().toLowerCase().equals(categoryName.toLowerCase())){
+                    rootNode = node;
+                    break;
+                }
+            }
+        }
+        catch (Exception ex){
+            int x = 1;
+        }
+
+
+        if(rootNode == null){
+            return;
+        }
 
         GlobalVariable.set_topCategoryNode(rootNode);
+    }
+
+    /*public static void getHierarchy(Context context, String nodeId, final IVolleyCallback callback){
+        RequestQueue requestQueue = Volley.newRequestQueue(context);
+        String url = "http://seetywebapi.azurewebsites.net/api/Hierarchy/"+nodeId;
+
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET,
+                url,
+                null,
+                new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                // Handle your response
+                callback.onSuccessResponse(response);
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+
+                // Handle your error
+                int x = 1;
+
+            }
+        });
+
+        requestQueue.add(jsonObjectRequest);
+    }*/
+
+    public static void getHierarchies(final Context context, final IVolleyCallback callback){
+        RequestQueue requestQueue = Volley.newRequestQueue(context);
+        String url = "http://seetywebapi.azurewebsites.net/api/Hierarchy";
+
+        JsonArrayRequest request = new JsonArrayRequest(url,
+                new Response.Listener<JSONArray>() {
+                    @Override
+                    public void onResponse(JSONArray jsonArray) {
+                        callback.onSuccessResponse(jsonArray);
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError volleyError) {
+                        Toast.makeText(context, "Unable to fetch data: " + volleyError.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                });
+
+        requestQueue.add(request);
     }
 
     private OptionNode getMockedTree(String categoryName){

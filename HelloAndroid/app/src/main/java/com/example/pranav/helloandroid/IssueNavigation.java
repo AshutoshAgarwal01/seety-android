@@ -39,9 +39,6 @@ public class IssueNavigation extends Activity {
     private void initialize() {
         initializeBottomNav();
 
-        /*TextView toolbarText = findViewById(R.id.toolbar_text);
-        toolbarText.setText(R.string.issue_navigation);*/
-
         TextView tv = findViewById(R.id.topCategories);
         tv.setText(currentNode.get_description());
         renderOptions(currentNode.get_optionType());

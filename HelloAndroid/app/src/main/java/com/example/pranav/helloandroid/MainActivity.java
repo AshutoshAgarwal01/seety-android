@@ -11,6 +11,16 @@ import android.view.Menu;
 import android.view.View;
 import android.widget.TextView;
 
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+
 public class MainActivity extends AppCompatActivity {
 
     DrawerLayout mainDrawer;
@@ -23,6 +33,24 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         initialize();
+        Utilities.getHierarchies(this
+            ,new IVolleyCallback(){
+                @Override
+                public void onSuccessResponse(JSONArray array) {
+                    ArrayList<OptionNode> nodes = new ArrayList<>();
+                    for (int i = 0; i < array.length(); i++) {
+                        OptionNode node;
+                        try{
+                            JSONObject row = array.getJSONObject(i);
+                            node = new Gson().fromJson(row.toString(),OptionNode.class);
+                            nodes.add(node);
+                        }
+                        catch (Exception ex){
+                        }
+                    }
+                    GlobalVariable.set_allCategories(nodes);
+                }
+            });
     }
 
     private void setupToolbar(){

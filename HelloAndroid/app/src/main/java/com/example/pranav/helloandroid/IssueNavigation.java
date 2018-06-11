@@ -165,6 +165,8 @@ public class IssueNavigation extends Activity {
                         c.setCardBackgroundColor(Color.parseColor("#FFFFFF"));
                     }
                     cv.setCardBackgroundColor(Color.LTGRAY);
+
+                    nextClick(lv);
                 }
             });
         }
@@ -197,7 +199,7 @@ public class IssueNavigation extends Activity {
 
         //Now create linear layout inside this card.
         LinearLayout innerLinear = new LinearLayout(this);
-        innerLinear.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
+        innerLinear.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
         innerLinear.setOrientation(LinearLayout.HORIZONTAL);
         innerLinear.setHorizontalGravity(Gravity.LEFT);
         innerLinear.setVerticalGravity(Gravity.CENTER_VERTICAL);
@@ -205,10 +207,11 @@ public class IssueNavigation extends Activity {
         int innerLayoutMargin = Utilities.getMeasureinDp(this,10);
         Utilities.setMargins(innerLinear, innerLayoutMargin, innerLayoutMargin, innerLayoutMargin, innerLayoutMargin);
 
-        //Create image view that will go inside inner linear view.
-        ImageView iv = new ImageView(this);
         int ivHeight = Utilities.getMeasureinDp(this,64);
         int ivWidth = Utilities.getMeasureinDp(this,64);
+
+        //Create image view that will go inside inner linear view.
+        ImageView iv = new ImageView(this);
         LinearLayout.LayoutParams ivParams = new LinearLayout.LayoutParams(ivWidth, ivHeight);
         iv.setLayoutParams(ivParams);
 
@@ -233,8 +236,9 @@ public class IssueNavigation extends Activity {
             int rbH = Utilities.getMeasureinDp(this,50);
             int rbW = Utilities.getMeasureinDp(this,50);
             LinearLayout.LayoutParams rbParams = new LinearLayout.LayoutParams(ivWidth, ivHeight);
-            rbParams.setLayoutDirection(LayoutDirection.LTR);
+            //rbParams.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
             rb.setLayoutParams(rbParams);
+            rb.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
             innerLinear.addView(rb);
         }*/
 

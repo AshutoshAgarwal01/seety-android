@@ -6,8 +6,11 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.AppCompatImageView;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.GridLayout;
 import android.widget.TextView;
 import com.google.gson.Gson;
 import org.json.JSONArray;
@@ -41,9 +44,9 @@ public class MainActivity extends AppCompatActivity {
                         }
                     }
                     GlobalVariable.set_allCategories(nodes);
+                    renderTopCategories();
                 }
             });
-
         initialize();
     }
 
@@ -73,9 +76,25 @@ public class MainActivity extends AppCompatActivity {
         setupToolbar();
     }
 
+    private void renderTopCategories() {
+        android.support.v7.widget.GridLayout grid_layout = findViewById(R.id.mainGrid);
+        ArrayList<OptionNode> topCategories = GlobalVariable.get_allCategories();
+        for (int i = 0; i < topCategories.size(); i++) {
+            View to_add = LayoutInflater.from(this).inflate(R.layout.maincardview, grid_layout);
+
+            to_add.setId(topCategories.get(i).get_nodeId());
+            TextView tv = findViewById(R.id.cardTextId);
+            tv.setId(topCategories.get(i).get_nodeId()+1000);
+            tv.setTag(R.string.card_text_view);
+            tv.setText(topCategories.get(i).get_name());
+        }
+    }
+
     public void onTopCategoryClick(View v){
-        String categoryName = null;
-        switch (v.getId()){
+        TextView tv = v.findViewWithTag(R.string.card_text_view);
+        String categoryName = (String) tv.getText();
+
+        /*switch (v.getId()){
             case R.id.idAppliance:
                 categoryName = "Appliances";
                 break;
@@ -94,7 +113,7 @@ public class MainActivity extends AppCompatActivity {
             case R.id.idOthers:
                 categoryName = "Others";
                 break;
-        }
+        }*/
 
         //Load top category tree in global variable
         Utilities util = new Utilities();
